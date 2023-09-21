@@ -72,6 +72,7 @@ export default {
     return Buffer.from(new Uint8Array(numbers));
   },
   cutString(string, maxLength = 20) {
+    console.log(string)
     if (string.length <= maxLength) {
       return string;
     }

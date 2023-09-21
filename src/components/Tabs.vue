@@ -196,6 +196,7 @@ export default {
     },
     addKeyTab(client, key, newTab = false) {
       client.type(key).then((type) => {
+        console.log(type);
         // key not exists
         if (type === 'none') {
           this.$message.error({
@@ -206,20 +207,22 @@ export default {
           return;
         }
 
+        // this.$message.success(`${key} ${this.$t('message.key_type')}: ${type}`);
+
         this.addTab(this.initKeyTabItem(client, key, type), newTab);
       }).catch(e => {
-        this.$message.error('Type Error: ' + e.message);
+        this.$message.error('Type Error: '+ e.message);
       });
     },
     initKeyTabItem(client, key, type) {
       const cutString = this.$util.cutString;
       const dbIndex = client.condition ? client.condition.select : 0;
-      const connectionName = client.options.connectionName;
+      const connectionName = client.options.connectionName ? client.options.connectionName : "";
       const keyStr = this.$util.bufToString(key);
 
       const label = `${cutString(keyStr)} | ${cutString(connectionName)} | DB${dbIndex}`;
       const name  = `${keyStr} | ${connectionName} | DB${dbIndex}`;
-
+      console.log("done")
       return {
         name: name, label: label, title: name, client: client, component: 'key',
         redisKey: key, keyType: type,

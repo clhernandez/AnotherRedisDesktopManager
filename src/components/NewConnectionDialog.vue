@@ -62,6 +62,11 @@
             {{ $t('message.connection_readonly') }}
           </el-popover>
         </el-checkbox>
+        <el-checkbox v-model="connection.dynomite">
+          Dynomite
+          <el-popover trigger="hover">
+          </el-popover>
+        </el-checkbox>
       </el-form-item>
     </el-form>
 
@@ -201,6 +206,7 @@ export default {
         separator: ':',
         cluster: false,
         connectionReadOnly: false,
+        dynomite: false,
         sshOptions: {
           host: '',
           port: 22,

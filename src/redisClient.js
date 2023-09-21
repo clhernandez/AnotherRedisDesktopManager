@@ -37,6 +37,7 @@ Redis.prototype.sendCommand = function (...options) {
 // fix ioredis hgetall key has been toString()
 Redis.Command.setReplyTransformer("hgetall", (result) => {
   let arr = [];
+  console.log(result)
   for (let i = 0; i < result.length; i += 2) {
     arr.push([result[i], result[i + 1]]);
   }
@@ -49,7 +50,6 @@ export default {
   createConnection(host, port, auth, config, promise = true, forceStandalone = false, removeDb = false) {
     let options = this.getRedisOptions(host, port, auth, config);
     let client = null;
-
     if (removeDb) {
       delete options.db;
     }
@@ -193,16 +193,17 @@ export default {
   },
 
   getRedisOptions(host, port, auth, config) {
-    return {
+    let options = {
       // add additional host+port to options for "::1"
       host: host,
       port: port,
       family: 0,
+      dynomite: config.dynomite,
 
       connectTimeout: 30000,
       retryStrategy: (times) => {return this.retryStragety(times, {host, port})},
       enableReadyCheck: false,
-      connectionName: config.connectionName ? config.connectionName : null,
+      connectionName: config.connectionName ? config.connectionName : undefined,
       password: auth,
       db: config.db ? config.db : undefined,
       // ACL support
@@ -212,6 +213,12 @@ export default {
       // return int as string to avoid big number issues
       stringNumbers: true,
     };
+    if (config.dynomite) {
+      delete options.connectionName;
+      options.db = 0;
+    }
+
+    return options;
   },
 
   getSentinelOptions(host, port, auth, config) {

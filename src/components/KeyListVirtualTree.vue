@@ -294,6 +294,7 @@ export default {
       this.$emit('exportBatch', keys);
     },
     clickKey(key, newTab = false) {
+      // console.log('clickKey', this.client, key, newTab)
       this.$bus.$emit('clickedKey', this.client, key, newTab);
     },
     multipleCheck (node, event) {
